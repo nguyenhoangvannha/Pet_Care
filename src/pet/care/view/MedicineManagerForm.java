@@ -74,6 +74,7 @@ public class MedicineManagerForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pet/care/view/Bundle"); // NOI18N
         setTitle(bundle.getString("MedicineManagerForm.title")); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1366, 768));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -122,13 +123,13 @@ public class MedicineManagerForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 484, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnEdit)
                         .addGap(18, 18, 18)
                         .addComponent(btnDelete))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 710, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -140,7 +141,7 @@ public class MedicineManagerForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdd)
@@ -172,8 +173,9 @@ public class MedicineManagerForm extends javax.swing.JFrame {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-        String medicineID = (String) defaultTableModel.getValueAt(tblCustomer.getSelectedRow(),0);
+        
         if(tblCustomer.getSelectedRow() != -1){
+            String medicineID = (String) defaultTableModel.getValueAt(tblCustomer.getSelectedRow(),0);
             MedicineEditDetailDialog dialog = new MedicineEditDetailDialog(this, connection, medicineID);
             dialog.setVisible(true);
         } else {
@@ -182,8 +184,8 @@ public class MedicineManagerForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        String medicineID = (String) defaultTableModel.getValueAt(tblCustomer.getSelectedRow(), 0);
         if(tblCustomer.getSelectedRow() != -1){
+            String medicineID = (String) defaultTableModel.getValueAt(tblCustomer.getSelectedRow(), 0);
             int choose = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa thuốc: " + medicineID, "Cẩn thận!"
                     , JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             if(choose == JOptionPane.OK_OPTION){

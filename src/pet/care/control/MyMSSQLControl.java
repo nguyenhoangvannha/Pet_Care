@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pet.care.model.CustomerModel;
 import pet.care.model.MedicineModel;
 import pet.care.model.StaffModel;
 import pet.care.view.StaffManagerForm;
@@ -157,6 +158,29 @@ public class MyMSSQLControl {
         } catch (SQLException ex) {
             Logger.getLogger(MyMSSQLControl.class.getName()).log(Level.SEVERE, null, ex);
             return "Error :" + ex.toString();
+        }
+    }
+    public static String addCustomer(Connection conn, CustomerModel cus){
+        try {
+            String sql = "insert into Customer values(?,?,?,?,?,?,?,?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, cus.getId());
+            ps.setString(2, cus.getName());
+            ps.setInt(3, cus.getSex());
+            ps.setString(4, cus.getCitizenId());
+            ps.setString(5, cus.getAddress());
+            ps.setString(6, cus.getPhone());
+            ps.setString(7, cus.getEmail());
+            ps.setInt(8, cus.getNumPet());
+            if(ps.executeUpdate() < 1){
+                return "Cannot insert!";
+            } else {
+                return "Success";
+            }
+        } catch (SQLException ex) {
+            System.out.println("SQLException: "+ ex.toString());
+            Logger.getLogger(StaffManagerForm.class.getName()).log(Level.SEVERE, null, ex);
+            return "Error: " + ex.toString();
         }
     }
 }

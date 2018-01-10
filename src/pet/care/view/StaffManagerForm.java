@@ -74,6 +74,7 @@ public class StaffManagerForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pet/care/view/Bundle"); // NOI18N
         setTitle(bundle.getString("StaffManagerForm.title")); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1366, 768));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -172,15 +173,20 @@ public class StaffManagerForm extends javax.swing.JFrame {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-        String username = (String) defaultTableModel.getValueAt(tblCustomer.getSelectedRow(), 7);
-        StaffEditDetailDialog dialog = new StaffEditDetailDialog(this, connection, username);
-        dialog.setVisible(true);
+        if(tblCustomer.getSelectedRow() != -1){
+            String username = (String) defaultTableModel.getValueAt(tblCustomer.getSelectedRow(), 7);
+            StaffEditDetailDialog dialog = new StaffEditDetailDialog(this, connection, username);
+            dialog.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Chọn một nhân viên để sửa!");
+        }
+        
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
-        String username = (String) defaultTableModel.getValueAt(tblCustomer.getSelectedRow(), 7);
         if(tblCustomer.getSelectedRow() != -1){
+            String username = (String) defaultTableModel.getValueAt(tblCustomer.getSelectedRow(), 7);
             int choose = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa nhân viên: " + username, "Cẩn thận!"
                     , JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             if(choose == JOptionPane.OK_OPTION){

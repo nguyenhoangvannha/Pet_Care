@@ -8,7 +8,6 @@ package pet.care.view;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.print.attribute.standard.Finishings;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -277,6 +276,7 @@ public class HomeAppForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(!currentUser.isAdmin()){
             CustomerManagerForm customerManagerForm = new CustomerManagerForm(this);
+            customerManagerForm.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, LocaleBundle.getResourceBundle().getString("accessdenied")
                     ,LocaleBundle.getResourceBundle().getString("error"), JOptionPane.INFORMATION_MESSAGE);

@@ -14,8 +14,8 @@ public class PetModel {
     private String id;
     private String name;
     private CustomerModel boss;
-    private byte sex;
-    private byte age;
+    private int sex;
+    private int age;
     private String status;
     private static byte MALE = 1;
     private static byte FEMALE = 0;
@@ -23,7 +23,7 @@ public class PetModel {
         
     }
 
-    public PetModel(String id, String name, CustomerModel boss, byte sex, byte age, String status) {
+    public PetModel(String id, String name, CustomerModel boss, int sex, int age, String status) {
         this.id = id;
         this.name = name;
         this.boss = boss;
@@ -77,28 +77,28 @@ public class PetModel {
     /**
      * @return the sex
      */
-    public byte getSex() {
+    public int getSex() {
         return sex;
     }
 
     /**
      * @param sex the sex to set
      */
-    public void setSex(byte sex) {
+    public void setSex(int sex) {
         this.sex = sex;
     }
 
     /**
      * @return the age
      */
-    public byte getAge() {
+    public int getAge() {
         return age;
     }
 
     /**
      * @param age the age to set
      */
-    public void setAge(byte age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -144,4 +144,5 @@ public class PetModel {
         FEMALE = aFEMALE;
     }
 
+   
 }

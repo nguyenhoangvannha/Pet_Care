@@ -36,9 +36,7 @@ public class CustomerManagerForm extends javax.swing.JFrame {
      * Creates new form PetManagerForm
      */
     public CustomerManagerForm(HomeAppForm homeForm) {
-        
         this.homeForm = homeForm;
-        
         Locale.setDefault(LocaleBundle.getLocale());
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -50,6 +48,7 @@ public class CustomerManagerForm extends javax.swing.JFrame {
         resizeTableColumns();
         this.setLocationRelativeTo(null);
         getContentPane().setBackground(GlobalValues.formBackgroundColor);
+        homeForm.setVisible(false);
         getConnectToDataBase();
     }
 
@@ -64,14 +63,15 @@ public class CustomerManagerForm extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblCustomer = new javax.swing.JTable();
+        tblPet = new javax.swing.JTable();
         btnAdd = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pet/care/view/Bundle"); // NOI18N
-        setTitle(bundle.getString("CustomerManagerForm.title")); // NOI18N
+        setTitle(bundle.getString("CustomerManagerForm.title_1")); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1366, 768));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -81,14 +81,14 @@ public class CustomerManagerForm extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 153, 153));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText(bundle.getString("CustomerManagerForm.jLabel1.text")); // NOI18N
+        jLabel1.setText(bundle.getString("CustomerManagerForm.jLabel1.text_1")); // NOI18N
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        tblCustomer.setModel(defaultTableModel);
-        jScrollPane1.setViewportView(tblCustomer);
+        tblPet.setModel(defaultTableModel);
+        jScrollPane1.setViewportView(tblPet);
 
         btnAdd.setForeground(new java.awt.Color(0, 204, 153));
-        btnAdd.setText(bundle.getString("CustomerManagerForm.btnAdd.text")); // NOI18N
+        btnAdd.setText(bundle.getString("CustomerManagerForm.btnAdd.text_1")); // NOI18N
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -96,10 +96,10 @@ public class CustomerManagerForm extends javax.swing.JFrame {
         });
 
         btnEdit.setForeground(new java.awt.Color(0, 204, 153));
-        btnEdit.setText(bundle.getString("CustomerManagerForm.btnEdit.text")); // NOI18N
+        btnEdit.setText(bundle.getString("CustomerManagerForm.btnEdit.text_1")); // NOI18N
 
         btnDelete.setForeground(new java.awt.Color(0, 204, 153));
-        btnDelete.setText(bundle.getString("CustomerManagerForm.btnDelete.text")); // NOI18N
+        btnDelete.setText(bundle.getString("CustomerManagerForm.btnDelete.text_1")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -128,13 +128,13 @@ public class CustomerManagerForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdd)
                     .addComponent(btnEdit)
                     .addComponent(btnDelete))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -154,8 +154,9 @@ public class CustomerManagerForm extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        CustomerAddDialog customerAddForm = new CustomerAddDialog(this);
-        customerAddForm.setVisible(true);
+        CustomerAddDialog detailDialog = new CustomerAddDialog(this, connection);
+        detailDialog.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnAddActionPerformed
 
 
@@ -165,28 +166,35 @@ public class CustomerManagerForm extends javax.swing.JFrame {
     private javax.swing.JButton btnEdit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblCustomer;
+    private javax.swing.JTable tblPet;
     // End of variables declaration//GEN-END:variables
 
     private void initDefaultTableModel() {
         defaultTableModel = new DefaultTableModel();
-        defaultTableModel.addColumn(LocaleBundle.getResourceBundle().getString("name"));
+        defaultTableModel.addColumn(LocaleBundle.getResourceBundle().getString("PetManagerForm.tblPet.column.name"));
+        defaultTableModel.addColumn(LocaleBundle.getResourceBundle().getString("id"));
         defaultTableModel.addColumn(LocaleBundle.getResourceBundle().getString("sex"));
         defaultTableModel.addColumn(LocaleBundle.getResourceBundle().getString("phone"));
+        defaultTableModel.addColumn(LocaleBundle.getResourceBundle().getString("citizenid"));
+        defaultTableModel.addColumn(LocaleBundle.getResourceBundle().getString("address"));
         defaultTableModel.addColumn(LocaleBundle.getResourceBundle().getString("email"));
         defaultTableModel.addColumn(LocaleBundle.getResourceBundle().getString("petcount"));
     }
 
     private void resizeTableColumns() {
-        tblCustomer.getColumnModel().getColumn(0).setMinWidth(60);
-        tblCustomer.getColumnModel().getColumn(1).setMinWidth(80);
-        tblCustomer.getColumnModel().getColumn(2).setMinWidth(100);
-        tblCustomer.getColumnModel().getColumn(3).setMinWidth(180);
-        tblCustomer.getColumnModel().getColumn(4).setMinWidth(60);
+        tblPet.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tblPet.getColumnModel().getColumn(1).setPreferredWidth(20);
+        tblPet.getColumnModel().getColumn(2).setPreferredWidth(20);
+        tblPet.getColumnModel().getColumn(3).setPreferredWidth(50);
+        tblPet.getColumnModel().getColumn(4).setMinWidth(50);
+        tblPet.getColumnModel().getColumn(5).setMinWidth(180);
+        tblPet.getColumnModel().getColumn(6).setPreferredWidth(60);
+        tblPet.getColumnModel().getColumn(7).setPreferredWidth(20);
     }
 
     private void getConnectToDataBase() {
-        connection = MyMSSQLControl.getConnect(MyMSSQLControl.SERVER_NAME, MyMSSQLControl.DATABASE_NAME);
+        connection = MyMSSQLControl.getConnect("NACO", "dbPetCare");
+        //Connection connection = MyMSSQLControl.getConnect(MyMSSQLControl.SERVER_NAME, MyMSSQLControl.DATABASE_NAME);
         if(connection == null){
             int choose = JOptionPane.showConfirmDialog(this, LocaleBundle.getResourceBundle().getString("connectDataBaseError") 
                     + LocaleBundle.getResourceBundle().getString("retry")
@@ -198,30 +206,29 @@ public class CustomerManagerForm extends javax.swing.JFrame {
                 this.dispose();
             }
         } else {
-            this.setVisible(true);
-            homeForm.setVisible(false);
-            loadDataBase(connection);
+            loadDataBase();
         }
     }
 
-    private void loadDataBase(Connection connection) {
+    public void loadDataBase() {
         try {
             Statement statement = connection.createStatement();
-            String sql = "select * from Pet";
+            String sql = "select * from Customer";
             ResultSet resultSet = statement.executeQuery(sql);
             defaultTableModel.setRowCount(0);
             while(resultSet.next()){
                 Vector v = new Vector();
-                v.add(resultSet.getString("id"));
-                v.add(resultSet.getString("name"));
-                v.add(resultSet.getString("idBoss"));
-                v.add(resultSet.getInt("sex"));
-                v.add(resultSet.getString("color"));
-                v.add(resultSet.getInt("age"));
-                v.add(resultSet.getString("status"));
+                v.add(resultSet.getString("Name"));
+                v.add(resultSet.getString("ID"));
+                v.add(resultSet.getInt("Sex"));
+                v.add(resultSet.getString("Phone"));
+                v.add(resultSet.getString("CitizenID"));
+                v.add(resultSet.getString("Address"));
+                v.add(resultSet.getString("Email"));
+                v.add(resultSet.getInt("NumPet"));
                 defaultTableModel.addRow(v);
+                System.out.println("Ok");
             }
-            System.out.println("LoadDatabase success!");
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ ex.toString());
             Logger.getLogger(CustomerManagerForm.class.getName()).log(Level.SEVERE, null, ex);

@@ -5,6 +5,7 @@
  */
 package pet.care.view;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -18,6 +19,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import pet.care.control.GlobalValues;
 import pet.care.control.LocaleBundle;
+import pet.care.control.MyMSSQLControl;
 import pet.care.model.CustomerModel;
 import pet.care.model.PetModel;
 
@@ -28,12 +30,14 @@ import pet.care.model.PetModel;
 public class CustomerAddDialog extends JDialog {
     private CustomerModel customer;
     private ArrayList<PetModel> pets;
+    private Connection connection;
     private CustomerManagerForm customerManagerForm;
     /**
      * Creates new form CustomerAddForm
      */
-    public CustomerAddDialog(CustomerManagerForm customerManagerForm) {
+    public CustomerAddDialog(CustomerManagerForm customerManagerForm, Connection connection) {
         this.customerManagerForm = customerManagerForm;
+        this.connection = connection;
         Locale.setDefault(LocaleBundle.getLocale());
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -42,6 +46,7 @@ public class CustomerAddDialog extends JDialog {
         }
         initComponents();
         customer = new CustomerModel();
+        pets = new ArrayList<PetModel>();
         this.setModal(true);
         this.setLocationRelativeTo(null);
         getContentPane().setBackground(GlobalValues.formBackgroundColor);
@@ -71,7 +76,7 @@ public class CustomerAddDialog extends JDialog {
         txtName = new javax.swing.JTextField();
         lblPetSex = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        txtSex = new javax.swing.JTextField();
+        cbxSex = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         lblEmail = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
@@ -220,6 +225,13 @@ public class CustomerAddDialog extends JDialog {
         jLabel4.setForeground(new java.awt.Color(0, 204, 153));
         jLabel4.setText(bundle.getString("CustomerAddDialog.jLabel4.text")); // NOI18N
 
+        cbxSex.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ", "Khác" }));
+        cbxSex.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxSexItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout lblPetSexLayout = new javax.swing.GroupLayout(lblPetSex);
         lblPetSex.setLayout(lblPetSexLayout);
         lblPetSexLayout.setHorizontalGroup(
@@ -227,8 +239,8 @@ public class CustomerAddDialog extends JDialog {
             .addGroup(lblPetSexLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtSex, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+                .addComponent(cbxSex, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         lblPetSexLayout.setVerticalGroup(
@@ -237,7 +249,7 @@ public class CustomerAddDialog extends JDialog {
                 .addContainerGap()
                 .addGroup(lblPetSexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtSex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxSex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -316,11 +328,21 @@ public class CustomerAddDialog extends JDialog {
         btnSave.setForeground(new java.awt.Color(0, 204, 153));
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pet/care/view/drawable/ic_save_black_18dp.png"))); // NOI18N
         btnSave.setText(bundle.getString("CustomerAddDialog.btnSave.text")); // NOI18N
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnDiscard.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnDiscard.setForeground(new java.awt.Color(0, 204, 153));
         btnDiscard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pet/care/view/drawable/ic_close_black_18dp.png"))); // NOI18N
         btnDiscard.setText(bundle.getString("CustomerAddDialog.btnDiscard.text")); // NOI18N
+        btnDiscard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDiscardActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -363,7 +385,7 @@ public class CustomerAddDialog extends JDialog {
                         .addComponent(lblPetName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblPetSex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(14, 14, 14)
                         .addComponent(lblPetType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblPetAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -382,7 +404,7 @@ public class CustomerAddDialog extends JDialog {
                         .addComponent(btnDiscard)
                         .addGap(12, 12, 12)
                         .addComponent(btnNext)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
@@ -400,10 +422,42 @@ public class CustomerAddDialog extends JDialog {
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
         // TODO add your handling code here:
         if(checkInput()){
-            PetDetailDialog petDetailForm = new PetDetailDialog(this);
+            customer.setNumPet(Integer.parseInt(txtPetCount.getText()));
+            
+            PetAddNewDialog petDetailForm = new PetAddNewDialog(this, customer.getNumPet(), pets);
             petDetailForm.setVisible(true);
         }
     }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        if(pets.size() != Integer.parseInt(txtPetCount.getText())){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin vật nuôi trước khi lưu");
+        } else  {
+            for(int i = 0 ; i < pets.size(); i++){
+                pets.get(i).setBoss(customer);
+            }
+            customer.setName(txtName.getText());
+            customer.setAddress(txtAddress.getText());
+            customer.setCitizenId(txtCitizenId.getText());
+            customer.setEmail(txtEmail.getText());
+            customer.setId("KH" + txtCitizenId.getText());
+            customer.setPhone(txtPhone.getText());
+            customer.setSex(cbxSex.getSelectedIndex());
+            MyMSSQLControl.addCustomer(connection, customer);
+            customerManagerForm.loadDataBase();
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnDiscardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiscardActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnDiscardActionPerformed
+
+    private void cbxSexItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxSexItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxSexItemStateChanged
     
     private boolean checkInput(){
         String error = "";
@@ -414,9 +468,12 @@ public class CustomerAddDialog extends JDialog {
         if(name.equals("")){
             showStatusDialog(lblName.getText() + LocaleBundle.getResourceBundle().getString("inputNullError"), JOptionPane.ERROR_MESSAGE);
             txtName.requestFocus();
+            return false;
         }
         if(citizenId.equals("")){
-            showStatusDialog(lblCitizenId.getText() + LocaleBundle.getResourceBundle().getString("inputNullError"), JOptionPane.ERROR_MESSAGE);
+            showStatusDialog(lblCitizenId.getText() + LocaleBundle.getResourceBundle().getString("inputNullError")
+                    , JOptionPane.ERROR_MESSAGE);
+            return false;
         }
         try {
             pets = new ArrayList<>(Integer.parseInt(txtPetCount.getText()));
@@ -430,45 +487,12 @@ public class CustomerAddDialog extends JDialog {
         JOptionPane.showMessageDialog(this, error
                     , LocaleBundle.getResourceBundle().getString("error"), type);
     }
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(CustomerAddDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(CustomerAddDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(CustomerAddDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(CustomerAddDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new CustomerAddDialog().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDiscard;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnSave;
+    private javax.swing.JComboBox<String> cbxSex;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -491,7 +515,6 @@ public class CustomerAddDialog extends JDialog {
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPetCount;
     private javax.swing.JTextField txtPhone;
-    private javax.swing.JTextField txtSex;
     // End of variables declaration//GEN-END:variables
 
     private boolean requestClose() {
